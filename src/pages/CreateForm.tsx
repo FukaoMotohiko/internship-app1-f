@@ -5,6 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 
 type Value = Date | [Date, Date] | null;
 interface ShiftFormData {
+  id: string;
   title: string;
   message: string;
   dates: string;
@@ -12,7 +13,7 @@ interface ShiftFormData {
 
 const CreateForm: React.FC = () => {
   const navigate = useNavigate();
-  const localStorageKey = 'shiftFormData';
+  // const localStorageKey = 'shiftFormData';
 
   const [title, setTitle] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -20,15 +21,15 @@ const CreateForm: React.FC = () => {
 
   const [calendarDate, setCalendarDate] = useState<Value>(new Date());
 
-  useEffect(() => {
-    const savedDataString = localStorage.getItem(localStorageKey);
-    if (savedDataString) {
-      const savedData: ShiftFormData = JSON.parse(savedDataString);
-      setTitle(savedData.title);
-      setMessage(savedData.message);
-      setDates(savedData.dates);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedDataString = localStorage.getItem(localStorageKey);
+  //   if (savedDataString) {
+  //     const savedData: ShiftFormData = JSON.parse(savedDataString);
+  //     setTitle(savedData.title);
+  //     setMessage(savedData.message);
+  //     setDates(savedData.dates);
+  //   }
+  // }, []);
 
   const handleCalendarChange = (newDate: Value) => {
     setCalendarDate(newDate);
@@ -39,9 +40,10 @@ const CreateForm: React.FC = () => {
         }
     };
   const handleCreateAndNavigate = () => {
-    const formData: ShiftFormData = { title, message, dates };
-    localStorage.setItem(localStorageKey, JSON.stringify(formData));
-    navigate('/adjustmentHeader');
+    const id = crypto.randomUUID();
+    const formData: ShiftFormData = {id, title, message, dates };
+    localStorage.setItem(id, JSON.stringify(formData));
+    navigate(`/adjustment/${id}`);
   }
   return (
     <div className='p-8 bg-gray-100 min-h-screen'>
@@ -63,9 +65,6 @@ const CreateForm: React.FC = () => {
         
             <div className="flex-1 p-6 bg-white rounded-lg shadow-md border-t-4 border-red-500">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">STEP2 日程</h2>
-                <div className="mb-4 flex justify-center">
-                    <Calendar onChange={handleCalendarChange} value={calendarDate} locale="ja-JP" className="border-none"/>
-                </div>
                 <p className="text-sm text-gray-600 mb-4">
                     ※シフト表で出欠をとりたい日程を決定してください。<br />
                     複数日程指定する場合は、改行してください。
@@ -76,6 +75,9 @@ const CreateForm: React.FC = () => {
                     <li>12/20(土)お昼から〜</li>
                 </ul>
                 <textarea className="w-full border border-gray-300 rounded-md p-2 h-36" value={dates} onChange={(e) => setDates(e.target.value)}></textarea>
+            </div>
+            <div className="mb-4 flex justify-center">
+              <Calendar onChange={handleCalendarChange} value={calendarDate} locale="ja-JP" className="border-none"/>
             </div>
         </div>
         <div className="text-center">

@@ -1,7 +1,8 @@
 import React from 'react';
-import CreateForm from './components/CreateForm';
+import CreateForm from './pages/CreateForm';
 import './index.css'; 
-import AdjustmentHeader from './components/AdjustmentHeader';
+import AdjustmentPage from './pages/AdjustmentPage';
+import AttendanceInput from './pages/AttendanceInput';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const App: React.FC = () => {
@@ -9,7 +10,8 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<CreateForm />} />
-        <Route path="/adjustmentHeader" element={<AdjustmentHeader />} />
+        <Route path="/adjustment/:id" element={<AdjustmentPage />} />
+        <Route path="/attendance/:id" element={<AttendanceInput />} />
       </Routes>
     </Router>
   );
